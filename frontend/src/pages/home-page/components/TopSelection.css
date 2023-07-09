@@ -5,6 +5,9 @@
     flex-direction: column;
     align-items: center;
 }
+.top-selection h1 {
+    margin: 2rem;
+}
 
 .selection-items {
     display: flex;

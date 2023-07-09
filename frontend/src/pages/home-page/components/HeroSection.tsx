@@ -6,7 +6,7 @@ const HeroSection = () => {
         <div className="hero-section">
             <div className="hero-content">
                 <img className="hero-bg" src={bg}/>
-                <h1>“Crazy ? I was crazy once, they locked me.”</h1>
+                <h1>“Crazy ? I was crazy once, they locked me in a room”</h1>
                 <p>- someone ?</p>
                 <div className="separation-bar"></div>
                 <p>

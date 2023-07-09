@@ -10,12 +10,14 @@ const NavBar = (props: NavbarProps) => {
     let _isAuth = props.auth;
     return (
         <nav className="navbar">
-            <h1>Project K</h1>
+            <Link to="/">
+                <h1>Project K</h1>
+            </Link>
             <div className="navigation">
                 {
                     _isAuth ?
                         NavMenu() :
-                        <Link to="/auth/login">Login</Link>
+                        <Link to="/auth/login" className="button-link button-login">Login</Link>
                 }
             </div>
         </nav>

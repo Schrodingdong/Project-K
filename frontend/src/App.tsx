@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {createBrowserRouter, RouterProvider,} from "react-router-dom";
+import {createBrowserRouter, RouterProvider, Route, Routes} from "react-router-dom";
 import LandingPage from "./pages/home-page/LandingPage";
 import NavBar from "./components/nav/NavBar";
 import Footer from "./components/footer/Footer";
@@ -30,7 +30,14 @@ function App() {
     return (
         <>
             <NavBar auth={_isAuth}/>
-            <RouterProvider router={router}/>
+            <Routes>
+                <Route path="/" element={<LandingPage/>}/>
+                <Route path="auth" element={<AuthPage/>}>
+                    <Route path="login" element={<Login/>}/>
+                    <Route path="register" element={<Register/>}/>
+                </Route>
+            </Routes>
+            {/*<RouterProvider router={router}/>*/}
             {/*<Footer/>*/}
         </>
     );

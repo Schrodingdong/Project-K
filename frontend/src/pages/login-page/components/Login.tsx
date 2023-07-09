@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 const Login = () => {
     return (
         <div className="auth-container">
@@ -9,6 +11,8 @@ const Login = () => {
                 <input type="password" id="password-field" name="password-field"/>
                 <input type="submit" value="Login" className="button-full"/>
             </form>
+            <br/>
+            <Link to="../register" className="underline-on-hover">Don't have an account ?</Link>
         </div>
     )
 }
