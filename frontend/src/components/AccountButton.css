@@ -1,0 +1,8 @@
+.account-button {
+    background-color: var(--secondary-color);
+    color: black;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+}

@@ -1,0 +1,15 @@
+.get-started {
+    padding: 1rem var(--page-maring);
+    display: flex;
+    justify-content: space-between;
+}
+
+.get-started-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.get-started-img {
+    width: 40%;
+}

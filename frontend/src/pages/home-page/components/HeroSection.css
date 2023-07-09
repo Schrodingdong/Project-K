@@ -1,0 +1,30 @@
+.hero-section{
+    display: flex;
+    flex-direction: row;
+    height: 500px;
+    padding: 0 var(--page-maring);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 60%, rgba(255,255,255,0) 100%);
+    position: relative;
+}
+.hero-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.hero-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.separation-bar{
+    width: 161px;
+    height: 5px;
+    background-color: var(--primary-color);
+}
