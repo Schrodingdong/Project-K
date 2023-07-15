@@ -2,7 +2,7 @@ package com.schrodingdong.authenticationservice.services;
 
 import com.schrodingdong.authenticationservice.models.AuthModel;
 import com.schrodingdong.authenticationservice.repository.AuthenticationRepository;
-import jakarta.validation.constraints.NotNull;
+import com.schrodingdong.authenticationservice.utils.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import java.util.List;
 public class AuthService {
     private final AuthenticationRepository authRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     /**
      * Method to register a user to the DB, if the user-email already exists, throw an exception
@@ -36,21 +37,31 @@ public class AuthService {
     /**
      * Login method to check if the user exists and if the password is correct, and generate JWT token
      * @param email user email
-     * @param password password that will be encrypted
-     * @return - the user that was created
+     * @param password non encrypted password
+     * @return - JWT token for the user
      * */
-    public AuthModel login(String email, String password) {
-        // Login Logic
+    public String login(String email, String password) {
+        // Check if the user exists
         if (!authRepository.existsByEmail(email)){
             throw new RuntimeException("User does not exist");
         }
+        // Check if the password is correct
         AuthModel user = authRepository.findByEmail(email);
         if (!passwordEncoder.matches(password, user.getPassword())){
             throw new RuntimeException("Wrong password");
         }
         // generate JWT token
+        String token = jwtUtils.generateToken(user);
+        return token;
+    }
 
-        return user;
+    /**
+     * Validate the given token
+     * @param token token to validate
+     * @throws RuntimeException if token is invalid
+     */
+    public void validateToken(String token) throws RuntimeException{
+        jwtUtils.validateToken(token);
     }
 
     public List<AuthModel> getAllUsers() {

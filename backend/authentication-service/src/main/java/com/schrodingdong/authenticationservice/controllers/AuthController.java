@@ -6,6 +6,7 @@ import com.schrodingdong.authenticationservice.models.LoginParams;
 import com.schrodingdong.authenticationservice.models.RegisterParams;
 import com.schrodingdong.authenticationservice.services.AuthService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,13 +40,29 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Validated @RequestBody LoginParams params) {
         // login the user in the user manager service
-        AuthModel user = new AuthModel();
+        String jwt;
         try {
-            user = authService.login(params.getEmail(), params.getPassword());
+            jwt = authService.login(params.getEmail(), params.getPassword());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(jwt);
+    }
+
+    @PostMapping("/validate-jwt")
+    public ResponseEntity<?> validateJwt(@RequestHeader("Authorization") String jwt) {
+        // validate the jwt token
+        try {
+            String tokenPrefix = "Bearer ";
+            if (!jwt.startsWith(tokenPrefix)){
+                throw new RuntimeException("Invalid token");
+            }
+            jwt = jwt.substring(tokenPrefix.length());
+            authService.validateToken(jwt);
+        } catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().body("Invalid Token");
+        }
+        return ResponseEntity.ok().body("Valid Token : " + jwt);
     }
 
 }
