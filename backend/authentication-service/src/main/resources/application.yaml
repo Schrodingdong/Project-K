@@ -4,19 +4,3 @@ server:
 
 jwt:
   secret: ${JWT_SECRET}
-#  expiration: ${JWT_EXPIRATION}
-
-spring:
-  security:
-  datasource:
-    url: jdbc:postgresql://localhost:9000/${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  jpa:
-      hibernate:
-          ddl-auto: update
-      show-sql: true
-      properties:
-          hibernate:
-          dialect: org.hibernate.dialect.PostgreSQL95Dialect

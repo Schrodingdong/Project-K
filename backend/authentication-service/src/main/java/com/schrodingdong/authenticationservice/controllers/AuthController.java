@@ -65,4 +65,19 @@ public class AuthController {
         return ResponseEntity.ok().body("Valid Token : " + jwt);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String jwt) {
+        try {
+            String tokenPrefix = "Bearer ";
+            if (!jwt.startsWith(tokenPrefix)){
+                throw new RuntimeException("Invalid token");
+            }
+            jwt = jwt.substring(tokenPrefix.length());
+            authService.logout(jwt);
+        } catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().body("Invalid Token");
+        }
+        return ResponseEntity.ok().body("Logged out");
+    }
+
 }

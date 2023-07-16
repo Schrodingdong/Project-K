@@ -2,6 +2,7 @@ package com.schrodingdong.authenticationservice.services;
 
 import com.schrodingdong.authenticationservice.models.AuthModel;
 import com.schrodingdong.authenticationservice.repository.AuthenticationRepository;
+import com.schrodingdong.authenticationservice.repository.JwtBlacklistRepository;
 import com.schrodingdong.authenticationservice.utils.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthService {
     private final AuthenticationRepository authRepository;
+    private final JwtBlacklistRepository jwtBlacklistService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
@@ -62,6 +64,10 @@ public class AuthService {
      */
     public void validateToken(String token) throws RuntimeException{
         jwtUtils.validateToken(token);
+    }
+
+    public void logout(String token) {
+
     }
 
     public List<AuthModel> getAllUsers() {
