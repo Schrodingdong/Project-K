@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthService {
     private final AuthenticationRepository authRepository;
-    private final JwtBlacklistRepository jwtBlacklistService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
@@ -27,7 +26,7 @@ public class AuthService {
      * */
     public AuthModel register(String email, String password) {
         if (authRepository.existsByEmail(email)){
-            throw new RuntimeException("User already exists");
+            throw new RuntimeException("User already exists : " + email);
         }
         AuthModel user = new AuthModel();
         user.setEmail(email);
@@ -45,7 +44,7 @@ public class AuthService {
     public String login(String email, String password) {
         // Check if the user exists
         if (!authRepository.existsByEmail(email)){
-            throw new RuntimeException("User does not exist");
+            throw new RuntimeException("User does not exist : " + email);
         }
         // Check if the password is correct
         AuthModel user = authRepository.findByEmail(email);
@@ -58,7 +57,7 @@ public class AuthService {
     }
 
     /**
-     * Validate the given token
+     * Validate the given token, and checks if its blacklisted
      * @param token token to validate
      * @throws RuntimeException if token is invalid
      */
@@ -66,8 +65,21 @@ public class AuthService {
         jwtUtils.validateToken(token);
     }
 
-    public void logout(String token) {
+    /**
+     * Logout method to add the token to the blacklist
+     * @param token token to add to the blacklist
+     */
+    public void logout(String token) throws RuntimeException{
+        jwtUtils.blackListToken(token);
+    }
 
+    /**
+     * check if the token is blacklisted
+     * @param token token to check
+     * @return true if the token is blacklisted
+     */
+    public boolean isTokenBlacklisted(String token){
+        return jwtUtils.isBlackListed(token);
     }
 
     public List<AuthModel> getAllUsers() {
