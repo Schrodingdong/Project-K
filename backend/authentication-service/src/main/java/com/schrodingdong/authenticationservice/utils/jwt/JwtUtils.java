@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -90,5 +91,9 @@ public class JwtUtils {
             throw new RuntimeException("Invalid token syntax : " + rawJwt);
         }
         return rawJwt.substring(tokenPrefix.length());
+    }
+
+    public List<String> getAllBlacklistedTokens() {
+        return jwtBlacklistRepository.findAll().stream().map(e -> e.getJwt()).toList();
     }
 }

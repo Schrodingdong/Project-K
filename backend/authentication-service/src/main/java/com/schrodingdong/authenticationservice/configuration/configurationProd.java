@@ -10,5 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Profile("prod")
 @EnableWebSecurity
 public class configurationProd {
-    //TODO
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/**");
+    }
 }

@@ -85,4 +85,7 @@ public class AuthService {
     public List<AuthModel> getAllUsers() {
         return authRepository.findAll();
     }
+    public List<String> getAllBlackListedTokens() {
+        return jwtUtils.getAllBlacklistedTokens();
+    }
 }

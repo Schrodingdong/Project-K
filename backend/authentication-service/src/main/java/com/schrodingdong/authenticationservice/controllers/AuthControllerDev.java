@@ -18,11 +18,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/dev")
+@Profile("dev")
 @AllArgsConstructor
-public class AuthController {
+public class AuthControllerDev {
     private final AuthService authService;
-    private final Logger LOG = LoggerFactory.getLogger(AuthController.class);
+    private final Logger LOG = LoggerFactory.getLogger(AuthControllerDev.class);
+
+    @GetMapping("/register/all")
+    public ResponseEntity<?> getAllUsers(){
+        return ResponseEntity.ok().body(
+                authService.getAllUsers()
+        );
+    }
+
+    @GetMapping("/jwtBlacklist/all")
+    public ResponseEntity<?> getAllJwtBlacklist(){
+        return ResponseEntity.ok().body(
+                authService.getAllBlackListedTokens()
+        );
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Validated @RequestBody RegisterParams params) {
