@@ -1,7 +1,7 @@
 server:
+  port: 8080
   servlet:
     context-path: /api/v1
-  port: 8081
 jwt:
   secret: ${JWT_SECRET}
 eureka:
@@ -10,6 +10,15 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     registerWithEureka: true
     fetchRegistry: true
+
+amqp:
+  auth-validation:
+    queue:
+      request: auth-validation-req
+      response: auth-validation-res
+    exchange:
+      response: auth-validation-res-exchange
+
 spring:
   application:
     name: Authentication-Service

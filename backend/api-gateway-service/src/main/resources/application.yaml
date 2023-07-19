@@ -1,12 +1,23 @@
 spring:
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-
   application:
     name: gateway-service
+  cloud:
+    discovery:
+      enabled: true
+  rabbitmq:
+    host: localhost #change to rabbitmq when dockerized
+    port: 5672
+    username: guest
+    password: guest
+
+amqp:
+  auth-validation:
+    queue:
+      request: auth-validation-req
+      response: auth-validation-res
+    exchange:
+      request: auth-validation-req-exchange
+
 server:
-  port: 8080
+  port: 8888
+
