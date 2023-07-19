@@ -65,6 +65,11 @@ public class AuthService {
         jwtUtils.validateToken(token);
     }
 
+    public boolean isTokenSubjectSameAsEmail(String token, String email) throws RuntimeException{
+        String tokenSubject = jwtUtils.getTokenSubject(token);
+        return tokenSubject.equals(email);
+    }
+
     /**
      * Logout method to add the token to the blacklist
      * @param token token to add to the blacklist

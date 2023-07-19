@@ -84,6 +84,9 @@ public class JwtUtils {
         return jwtBlacklistRepository.existsByJwt(token);
     }
 
+    public String getTokenSubject(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+    }
 
     public static String extractJwt(String rawJwt) {
         String tokenPrefix = "Bearer ";

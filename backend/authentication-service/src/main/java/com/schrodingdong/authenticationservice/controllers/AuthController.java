@@ -43,13 +43,16 @@ public class AuthController {
         try {
             String jwt = JwtUtils.extractJwt(requestHeaders.get("authorization"));
             if (jwt != null) {
+                // check token validity
                 authService.validateToken(jwt);
-                return ResponseEntity.ok().body(jwt);
+                // check token issuer and compare it with credentials
+                boolean subjComp = authService.isTokenSubjectSameAsEmail(jwt, params.getEmail());
+                if (subjComp)
+                    return ResponseEntity.ok().body(jwt);
             }
         } catch (RuntimeException e) {
             LOG.warn("needs login : " + e.getMessage());
         }
-        // login the user in the user manager service
         String jwt;
         try {
             jwt = authService.login(params.getEmail(), params.getPassword());
