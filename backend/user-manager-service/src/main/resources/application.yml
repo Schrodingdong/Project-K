@@ -1,0 +1,11 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /api/v1
+
+spring:
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: switch-evita-banana-info-santana-9583
