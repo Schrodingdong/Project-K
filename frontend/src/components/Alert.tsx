@@ -16,7 +16,7 @@ function Alert(props: AlertProps) {
 
   setTimeout(() => {
     setVisible(false)
-  }, 2000)
+  }, 5000)
 
   return (
     <>{
