@@ -1,19 +1,27 @@
-import { utilProps } from '../../App';
+import {AuthContext, utilProps} from '../../App';
 import './AuthPage.css'
-import {Outlet} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
+import {useContext} from "react";
 
 interface AuthPageProps extends utilProps{}
 
 const AuthPage = (props: AuthPageProps) => {
-
+    const authContext = useContext(AuthContext)
+    const isAuth = authContext.isAuth;
+    console.log(isAuth);
     return (
-        <div className="auth-page">
-            <div className="background-gradient"></div>
-            <h1>Authentication</h1>
-            <div className="center">
-                <Outlet />
-            </div>
-        </div>
+        <>
+            {
+                !isAuth?
+                    <div className="auth-page">
+                        <div className="background-gradient"></div>
+                        <div className="center">
+                            <Outlet />
+                        </div>
+                    </div>:
+                    <Navigate to={"/home"}/>
+            }
+        </>
     )
 }
 

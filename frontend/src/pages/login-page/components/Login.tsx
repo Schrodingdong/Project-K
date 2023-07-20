@@ -1,10 +1,12 @@
-import {Link, useNavigate} from "react-router-dom";
-import { useState, useEffect } from 'react';
-import { utilProps } from "../../../App";
+import {Link, Navigate, useNavigate} from "react-router-dom";
+import {useState, useEffect, useContext} from 'react';
+import {AuthContext, utilProps} from "../../../App";
 import { instance, getJwt, getSubject } from "../../../api/instance";
 import jwtDecode from "jwt-decode";
 
-interface LoginProps extends utilProps{}
+interface LoginProps extends utilProps{
+    setAuthToken: (token: string) => void;
+}
 /**
  * Should do the following :
  * - Check if jwt exists in cookies
@@ -14,6 +16,8 @@ interface LoginProps extends utilProps{}
  *      - clear cookies, force to login
  */
 const Login = (props: LoginProps) => {
+    const authContext = useContext(AuthContext);
+    const isAuth = authContext.isAuth;
     const [log_email, setEmail] = useState("");
     const [log_password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -37,39 +41,33 @@ const Login = (props: LoginProps) => {
             const decodedJwt = jwtDecode<{sub:string, exp:Number, iat:Number}>(jwt);
             document.cookie = `jwt=${jwt}; path=/`
             document.cookie = `subject=${decodedJwt.sub}; path=/`
-            // navigate to homepage 
+            authContext.setAuthToken(jwt);
+            // navigate to homepage
             navigate("/home")
         }).catch((e) => {
             props.addAlert("Invalid credentials")
         })
     }
 
-    useEffect(() => {
-        // check if we have jwt
-        const jwt = getJwt();
-        if (jwt === null) return;
-        // subject checks
-        const subject = getSubject();
-        const extractedJwtSubject = jwtDecode<{sub:string, exp:Number, iat:Number}>(jwt? jwt: "").sub;
-        if (subject !== extractedJwtSubject) return;
-        navigate("/home");
-    }, [])
-    
-
-
     return (
-        <div className="auth-container">
-            <h1>Login</h1>
-            <form onSubmit={login}>
-                <label htmlFor="email-field">email</label>
-                <input type="text" id="email-field" name="email-field" onChange={e => setEmail(e.target.value)}/>
-                <label htmlFor="password-field">password</label>
-                <input type="password" id="password-field" name="password-field" onChange={e => setPassword(e.target.value)}/>
-                <input type="submit" value="Login" className="button-full"/>
-            </form>
-            <br/>
-            <Link to="../register" className="underline-on-hover">Don't have an account ?</Link>
-        </div>
+        <>
+            {
+                !isAuth?
+                    <div className="auth-container">
+                        <h1>Login</h1>
+                        <form onSubmit={login}>
+                            <label htmlFor="email-field">email</label>
+                            <input type="text" id="email-field" name="email-field" onChange={e => setEmail(e.target.value)}/>
+                            <label htmlFor="password-field">password</label>
+                            <input type="password" id="password-field" name="password-field" onChange={e => setPassword(e.target.value)}/>
+                            <input type="submit" value="Login" className="button-full"/>
+                        </form>
+                        <br/>
+                        <Link to="../register" className="underline-on-hover">Don't have an account ?</Link>
+                    </div>:
+                    <Navigate to={"/home"}/>
+            }
+        </>
     )
 }
 

@@ -21,10 +21,12 @@
 .nav-menu {
     display: flex;
     gap: 3rem;
+    align-items: center;
 }
 .nav-menu ul {
     list-style-type: none;
     display: flex;
+    align-items: center;
     gap: 1rem
 }
 
