@@ -1,14 +1,70 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { utilProps } from "../../../App";
+import { instance, getJwt, getSubject } from "../../../api/instance";
+import jwtDecode from "jwt-decode";
 
-const Login = () => {
+interface LoginProps extends utilProps{}
+/**
+ * Should do the following :
+ * - Check if jwt exists in cookies
+ * - validate it with the subject in the cookie
+ * - if gud :
+ *      - redirect Home
+ *      - clear cookies, force to login
+ */
+const Login = (props: LoginProps) => {
+    const [log_email, setEmail] = useState("");
+    const [log_password, setPassword] = useState("");
+    const navigate = useNavigate();
+
+    const login = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if(log_email.length === 0 || log_password.length === 0) {
+            props.addAlert("Incomplete credentials");
+            return;
+        }
+
+        instance.post("/auth/login", {
+            email: log_email,
+            password: log_password,
+        }, {
+            headers: getJwt() == null? {}:{'Authorization': getJwt()} ,
+        })
+        .then((res) => {
+            // store jwt
+            const jwt = res.data;
+            const decodedJwt = jwtDecode<{sub:string, exp:Number, iat:Number}>(jwt);
+            document.cookie = `jwt=${jwt}; path=/`
+            document.cookie = `subject=${decodedJwt.sub}; path=/`
+            // navigate to homepage 
+            navigate("/home")
+        }).catch((e) => {
+            props.addAlert("Invalid credentials")
+        })
+    }
+
+    useEffect(() => {
+        // check if we have jwt
+        const jwt = getJwt();
+        if (jwt === null) return;
+        // subject checks
+        const subject = getSubject();
+        const extractedJwtSubject = jwtDecode<{sub:string, exp:Number, iat:Number}>(jwt? jwt: "").sub;
+        if (subject !== extractedJwtSubject) return;
+        navigate("/home");
+    }, [])
+    
+
+
     return (
         <div className="auth-container">
             <h1>Login</h1>
-            <form>
+            <form onSubmit={login}>
                 <label htmlFor="email-field">email</label>
-                <input type="text" id="email-field" name="email-field"/>
+                <input type="text" id="email-field" name="email-field" onChange={e => setEmail(e.target.value)}/>
                 <label htmlFor="password-field">password</label>
-                <input type="password" id="password-field" name="password-field"/>
+                <input type="password" id="password-field" name="password-field" onChange={e => setPassword(e.target.value)}/>
                 <input type="submit" value="Login" className="button-full"/>
             </form>
             <br/>

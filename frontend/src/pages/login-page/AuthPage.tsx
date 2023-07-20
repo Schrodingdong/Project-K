@@ -1,7 +1,11 @@
+import { utilProps } from '../../App';
 import './AuthPage.css'
 import {Outlet} from "react-router-dom";
 
-const AuthPage = () => {
+interface AuthPageProps extends utilProps{}
+
+const AuthPage = (props: AuthPageProps) => {
+
     return (
         <div className="auth-page">
             <div className="background-gradient"></div>

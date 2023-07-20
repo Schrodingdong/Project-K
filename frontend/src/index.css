@@ -2,7 +2,18 @@
   --page-maring: 10rem;
   --primary-color: #7D4D29;
   --secondary-color: #D0BC91;
+  --error-color: rgb(205, 0, 0);
   --transition: 500ms;
+
+  --margin-s: 1rem;
+  --margin: 2rem;
+  --margin-l: 5rem;
+
+  --padding-s: 1rem;
+  --padding: 2rem;
+  --padding-l: 3rem;
+
+  --radius: 15px;
 }
 
 h1 {
