@@ -9,3 +9,6 @@ spring:
     authentication:
       username: neo4j
       password: switch-evita-banana-info-santana-9583
+  cloud:
+    discovery:
+      enabled: false
