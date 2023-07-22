@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      username: root
+      password: root
+      uri: mongodb://localhost:27017
+
+
+server:
+  servlet:
+    context-path: /api/v1
+  port: 8081
