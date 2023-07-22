@@ -17,3 +17,4 @@ docker run --publish=7474:7474 --publish=7687:7687 neo4j
   - [x] Get users followers
   - [x] Get users following
 - [ ] Add Quote relationships ?
+- [ ] clean the exceptions in the service

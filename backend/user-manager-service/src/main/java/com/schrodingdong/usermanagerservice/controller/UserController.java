@@ -58,10 +58,6 @@ public class UserController {
         }
         return ResponseEntity.ok().body(user.getFollowers());
     }
-    @GetMapping("/get/all")
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok().body(userService.getAllUsers());
-    }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestParam String email, @RequestBody UpdateUserParams body) {

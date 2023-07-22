@@ -25,6 +25,9 @@ public class UserService {
     public void deleteUser(String email) throws IllegalArgumentException{
         userRepository.deleteById(email);
     }
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
     public UserModel updateUser(String email, String username, String bio) throws NoSuchElementException, IllegalArgumentException {
         UserModel user = userRepository.findById(email).get();
         if (username != null && !username.isBlank()) user.setUsername(username);
