@@ -39,9 +39,13 @@ public class JwtValidationGatewayFilterFactory
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            LOG.info("Validating JWT...");
-            // JWT Extraction
+        	// Check if the Auth header exists
             String jwt = exchange.getRequest().getHeaders().getFirst("Authorization");
+            if (jwt == null) {
+            	exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+            // JWT Extraction
             String extractedJwt = JwtUtils.extractJwt(jwt);
             // JWT Send for validation
             IS_JWT_VALID = null;
@@ -58,9 +62,8 @@ public class JwtValidationGatewayFilterFactory
             // Check response
             if(!IS_JWT_VALID){
                 LOG.warn("JWT is not valid !");
-                return exchange.getResponse().setComplete().then(Mono.fromRunnable(() -> {
-                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                }));
+            	exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
             }
             // add header with the subejct in it
             String extractedUserEmail =JwtUtils.getSubjectFromToken(extractedJwt);
