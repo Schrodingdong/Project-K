@@ -6,7 +6,7 @@ spring:
 
   application:
     name: quote-manager-service
-
+issuer-bypass: "!Buw#Qu[Ps0.+Rk"
 server:
   servlet:
     context-path: /api/v1

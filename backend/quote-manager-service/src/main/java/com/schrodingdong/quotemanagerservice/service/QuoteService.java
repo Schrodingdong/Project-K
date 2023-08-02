@@ -6,14 +6,23 @@ import com.schrodingdong.quotemanagerservice.model.SaveQuoteParams;
 import com.schrodingdong.quotemanagerservice.model.UpdateQuoteParams;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class QuoteService {
     private final QuoteRepository quoteRepository;
+    private final Logger LOG = LoggerFactory.getLogger(QuoteService.class);
+    public QuoteService(QuoteRepository quoteRepository) {
+    	this.quoteRepository = quoteRepository;
+	}
+    @Value("${issuer-bypass}")
+    private String issuerBypassSecret;
 
     /***
      * Get All quotes of a user
@@ -52,18 +61,25 @@ public class QuoteService {
     }
 
     /***
-     * Update the quote given a specific id and params to changes
+     * Update the quote given a specific id and params to changes, and check if the request issuer is the same as the quote owner
      * 
      * @param params  with quote, book, bookAuthor (non essential)
      * @param quoteId the id of the quote to target
+     * @param issuerEmail the email of the request issuer
+     * @throws NotFoundException if the quoteId isn't associated to a quote
+     * @throws UnsupportedOperationException if the request issuer is different than the quote owner
      * @return null if there aren't any quotes with that id, otherwise returns the
      *         updated quote
      */
-    public QuoteModel updateQuote(UpdateQuoteParams params, String quoteId) {
-        // find it
-        QuoteModel q = quoteRepository.findById(quoteId).orElse(null);
-        if (q == null)
-            return null;
+    public QuoteModel updateQuote(UpdateQuoteParams params, String quoteId, String issuerEmail) throws
+    		NotFoundException, UnsupportedOperationException{
+        // find it and check ownership
+        QuoteModel q = quoteRepository.findById(quoteId)
+    			.orElseThrow(() -> new NotFoundException("Quote of ID : '" + quoteId + "' doesn't exist."));
+        if (!issuerEmail.equals(issuerBypassSecret) && !q.getUserEmail().equals(issuerEmail)) {
+			throw new UnsupportedOperationException("The quote isn't owned by the request issuer");
+        }
+    	
         // do update
         if (params.getQuote() != null && !params.getQuote().isEmpty() && !params.getQuote().isBlank()) {
             q.setQuote(params.getQuote());
@@ -79,15 +95,24 @@ public class QuoteService {
     }
 
     /***
-     * Delete a quote given its id
+     * Delete a quote given its id, and check if the issuer is the same as the quote owner
      * 
      * @param quoteId id of the quote to delete
-     * @return
+     * @param issuerEmail the email of the request issuer
+     * @throws NotFoundException if the quoteId isn't associated to a quote
+     * @throws UnsupportedOperationException if the request issuer is different than the quote owner
      */
-    public QuoteModel deleteQuoteById(String quoteId) {
+    public QuoteModel deleteQuoteById(String quoteId, String issuerEmail) throws NotFoundException, UnsupportedOperationException{
+    	// verify ownership 
+    	QuoteModel q = quoteRepository.findById(quoteId)
+    			.orElseThrow(() -> new NotFoundException("Quote of ID : '" + quoteId + "' doesn't exist."));
+        if (!issuerEmail.equals(issuerBypassSecret) && !q.getUserEmail().equals(issuerEmail)) {
+			throw new UnsupportedOperationException("The quote isn't owned by the request issuer");
+        }
+    	// delete if otherwise
         quoteRepository.deleteById(quoteId);
         // Verify if its really deleted
-        QuoteModel q = quoteRepository.findById(quoteId).orElse(null);
+        q = quoteRepository.findById(quoteId).orElse(null);
         return q;
     }
 
