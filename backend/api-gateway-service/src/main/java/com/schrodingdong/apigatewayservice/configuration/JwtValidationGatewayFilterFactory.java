@@ -12,7 +12,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+
 import reactor.core.publisher.Mono;
 
 /**
@@ -22,8 +25,6 @@ import reactor.core.publisher.Mono;
 @Component
 public class JwtValidationGatewayFilterFactory
         extends AbstractGatewayFilterFactory<JwtValidationGatewayFilterFactory.Config> {
-    @Autowired
-    private JwtUtils jwtUtils;
     @Autowired
     private QueueSender queueSender;
     private final Logger LOG = LoggerFactory.getLogger(JwtValidationGatewayFilterFactory.class);
@@ -41,7 +42,7 @@ public class JwtValidationGatewayFilterFactory
             LOG.info("Validating JWT...");
             // JWT Extraction
             String jwt = exchange.getRequest().getHeaders().getFirst("Authorization");
-            String extractedJwt = jwtUtils.extractJwt(jwt);
+            String extractedJwt = JwtUtils.extractJwt(jwt);
             // JWT Send for validation
             IS_JWT_VALID = null;
             queueSender.send(extractedJwt);
@@ -61,7 +62,16 @@ public class JwtValidationGatewayFilterFactory
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 }));
             }
-            return chain.filter(exchange);
+            // add header with the subejct in it
+            String extractedUserEmail =JwtUtils.getSubjectFromToken(extractedJwt);
+            LOG.info("The extracted User Email : " + extractedUserEmail);
+            ServerHttpRequest req = exchange.getRequest().mutate()
+            	.header("User-Email", extractedUserEmail)
+            	.build();
+            ServerWebExchange exchangeWithNewHeader = exchange.mutate()
+            		.request(req)
+            		.build();
+            return chain.filter(exchangeWithNewHeader);
         };
     }
 

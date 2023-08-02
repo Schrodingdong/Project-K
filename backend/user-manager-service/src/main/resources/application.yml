@@ -4,6 +4,8 @@ server:
     context-path: /api/v1
 
 spring:
+  application:
+    name: user-manager-service
   neo4j:
     uri: bolt://localhost:7687
     authentication:
@@ -11,4 +13,4 @@ spring:
       password: switch-evita-banana-info-santana-9583
   cloud:
     discovery:
-      enabled: false
+      enabled: true

@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "amqp.auth-validation.queue.request",
+    "type": "java.lang.String",
+    "description": "A description for 'amqp.auth-validation.queue.request'"
+  },
+  {
+    "name": "amqp.auth-validation.queue.response",
+    "type": "java.lang.String",
+    "description": "A description for 'amqp.auth-validation.queue.response'"
+  },
+  {
+    "name": "amqp.auth-validation.exchange.request",
+    "type": "java.lang.String",
+    "description": "A description for 'amqp.auth-validation.exchange.request'"
+  }
+]}

@@ -2,7 +2,7 @@
 
 ---
 ## Messaging 
-- [ ] AMQP Messaging
+- [x] AMQP Messaging
   - [x] Listening to the `auth-validation-req-q` queue
   - [x] Created the `auth-validation-res-q` queue
   - [x] Link it to `auth-validation-res-exchange` Exchange
@@ -20,6 +20,7 @@
 - [ ] Link with other services
   - [ ] User manager service
   - [ ] Api Gateway
+  
 ## Misc
 - [x] Configuring Dev and Prod configuration for separate profiles
   - [x] Use an in-memory database for dev profile

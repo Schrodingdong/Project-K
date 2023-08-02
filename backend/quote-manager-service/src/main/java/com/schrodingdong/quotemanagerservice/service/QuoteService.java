@@ -40,7 +40,10 @@ public class QuoteService {
      * @param params with user email, quote, book author, and book
      * @return The saved quote
      */
-    public QuoteModel saveQuote(SaveQuoteParams params) {
+    public QuoteModel saveQuote(SaveQuoteParams params) throws IllegalArgumentException {
+    	if (params.getUserEmail() == null || params.getUserEmail().isEmpty() || params.getUserEmail().isBlank()) {
+    		throw new IllegalArgumentException("User Email is Empty");
+    	}
         return quoteRepository.save(new QuoteModel(
                 params.getUserEmail(),
                 params.getQuote(),

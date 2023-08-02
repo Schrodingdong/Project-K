@@ -33,4 +33,10 @@ public class QuoteControllerDev {
         List<QuoteModel> allQuotes = quoteService.getAllQuotes();
         return ResponseEntity.ok().body(allQuotes);
     }
+    
+    @PostMapping("/save")
+    public ResponseEntity<?> saveQuote(@RequestBody @Validated SaveQuoteParams quoteParams){
+        QuoteModel savedQuote = quoteService.saveQuote(quoteParams);
+        return ResponseEntity.ok().body(savedQuote);
+    }
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class SaveQuoteParams {
-    @NotBlank
     private String userEmail;
     @NotBlank
     private String quote;

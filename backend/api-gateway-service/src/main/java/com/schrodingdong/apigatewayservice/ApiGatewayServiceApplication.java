@@ -1,6 +1,8 @@
 package com.schrodingdong.apigatewayservice;
 
 import com.schrodingdong.apigatewayservice.configuration.JwtValidationGatewayFilterFactory;
+import com.schrodingdong.apigatewayservice.utils.JwtUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,9 +22,9 @@ public class ApiGatewayServiceApplication {
 		SpringApplication.run(ApiGatewayServiceApplication.class, args);
 	}
 
-
 	@Autowired
 	private JwtValidationGatewayFilterFactory jwtValidationFilter;
+
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		GatewayFilter filter = jwtValidationFilter.apply(new JwtValidationGatewayFilterFactory.Config());
@@ -30,9 +32,19 @@ public class ApiGatewayServiceApplication {
 				.route(r -> r.path("/auth/**")
 						.filters(f -> f
 								.rewritePath("/(?<path>.*)", "/api/v1/$\\{path}")
-//								.filter(filter) // to use with other routes !
+						// .filter(filter) // to use with other routes !
 						)
 						.uri("lb://AUTHENTICATION-SERVICE"))
+				.route(r -> r.path("/quote/**")
+						.filters(f -> f
+								.rewritePath("/(?<path>.*)", "/api/v1/$\\{path}")
+								.filter(filter))
+						.uri("lb://QUOTE-MANAGER-SERVICE"))
+				.route(r -> r.path("/user/**")
+						.filters(f ->f
+								.rewritePath("/(?<path>.*)", "/api/v1/$\\{path}")
+								.filter(filter))
+						.uri("lb://USER-MANAGER-SERVICE"))
 				.build();
 	}
 }

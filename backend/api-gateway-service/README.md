@@ -13,3 +13,7 @@ The authorization is handled via **Filters**
   - [x] Created the `auth-validation-req-q` queue
   - [x] Linked it to `auth-validation-req-exchange` Exchange
   - [x] Listening to the `auth-validation-res-q` queue
+- [ ] Handle if the Authorization is not in the request
+	For now it give us internal server error, and an error in the console
+- [ ] Handle when the JWT is not validated
+	Concretely speaking we should redirect to the login page in the front

@@ -4,6 +4,8 @@ spring:
       uri: mongodb://localhost:27017
       database: projectK
 
+  application:
+    name: quote-manager-service
 
 server:
   servlet:
