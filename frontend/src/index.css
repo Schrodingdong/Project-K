@@ -78,3 +78,8 @@ code {
   color: var(--primary-color);
   background-color: white;
 }
+
+
+.main-content{
+  margin: var(--margin) var(--page-maring);
+}

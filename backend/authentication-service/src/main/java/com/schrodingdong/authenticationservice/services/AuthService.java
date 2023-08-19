@@ -1,20 +1,27 @@
 package com.schrodingdong.authenticationservice.services;
 
+import com.schrodingdong.authenticationservice.amqp.QueueSenderRegistration;
 import com.schrodingdong.authenticationservice.models.AuthModel;
 import com.schrodingdong.authenticationservice.repository.AuthenticationRepository;
 import com.schrodingdong.authenticationservice.repository.JwtBlacklistRepository;
 import com.schrodingdong.authenticationservice.utils.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
+
+import org.json.simple.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class AuthService {
     private final AuthenticationRepository authRepository;
     private final PasswordEncoder passwordEncoder;
+    private final QueueSenderRegistration queueSenderRegistration;
     private final JwtUtils jwtUtils;
 
     /**
@@ -22,9 +29,10 @@ public class AuthService {
      * @param email user email
      * @param password password that will be encrypted
      * @return - the user that was created
+     * @throws IOException 
      * @Throws - RuntimeException if the user already exists
      * */
-    public AuthModel register(String email, String password) {
+    public AuthModel register(String email, String password, String username) throws IOException, RuntimeException {
         if (authRepository.existsByEmail(email)){
             throw new RuntimeException("User already exists : " + email);
         }
@@ -32,6 +40,19 @@ public class AuthService {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         AuthModel u = authRepository.save(user);
+        if (u == null) {
+        	throw new IOException("Unable to save the user");
+        }
+        // register the user in the user manager service
+        JSONObject registrationMessage = new JSONObject();
+        registrationMessage.put("userEmail", email);
+        registrationMessage.put("username", username);
+        
+        
+        queueSenderRegistration.send(registrationMessage.toString());
+        
+        
+        
         return u;
     }
 

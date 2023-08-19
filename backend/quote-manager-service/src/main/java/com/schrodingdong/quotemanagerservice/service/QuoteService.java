@@ -1,25 +1,34 @@
 package com.schrodingdong.quotemanagerservice.service;
 
+import com.google.common.collect.Queues;
 import com.schrodingdong.quotemanagerservice.Repository.QuoteRepository;
+import com.schrodingdong.quotemanagerservice.amqp.QueueSenderFollowing;
 import com.schrodingdong.quotemanagerservice.model.QuoteModel;
 import com.schrodingdong.quotemanagerservice.model.SaveQuoteParams;
 import com.schrodingdong.quotemanagerservice.model.UpdateQuoteParams;
+import com.schrodingdong.quotemanagerservice.model.UserModel;
+
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.user.UserRegistryMessageHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class QuoteService {
+	private final QueueSenderFollowing queueSenderFollowing;
     private final QuoteRepository quoteRepository;
     private final Logger LOG = LoggerFactory.getLogger(QuoteService.class);
-    public QuoteService(QuoteRepository quoteRepository) {
+    public QuoteService(QuoteRepository quoteRepository, QueueSenderFollowing queueSenderFollowing) {
     	this.quoteRepository = quoteRepository;
+    	this.queueSenderFollowing = queueSenderFollowing;
 	}
     @Value("${issuer-bypass}")
     private String issuerBypassSecret;
@@ -32,6 +41,27 @@ public class QuoteService {
      */
     public List<QuoteModel> getQuotesFromUserEmail(String userEmail) {
         return quoteRepository.findByUserEmail(userEmail);
+    }
+
+    /***
+     * Get all the quotes of the user's following
+     *
+     * @param userEmail
+     * @return list of quotes of that user
+     */
+    public List<QuoteModel> getQuotesFromFollowing(String userEmail) throws RuntimeException {
+        try {
+            List<UserModel> followingList = queueSenderFollowing.send(userEmail);
+            List<QuoteModel> followingQuotes = new LinkedList<>();
+            for (UserModel u : followingList) {
+                var userQuotes = getQuotesFromUserEmail(u.getEmail());
+                followingQuotes.addAll(userQuotes);
+            }
+            return followingQuotes;
+        } catch (RuntimeException e) {
+            LOG.error("Error while getting following quotes", e);
+            throw e;
+        }
     }
 
     /***

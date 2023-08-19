@@ -1,6 +1,8 @@
 # Authentication Service Progress
 
 ---
+Dont forget the `JWT_SECRET` environment variable
+
 ## Messaging 
 - [x] AMQP Messaging
   - [x] Listening to the `auth-validation-req-q` queue

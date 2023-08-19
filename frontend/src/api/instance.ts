@@ -3,7 +3,10 @@ import axios from "axios";
 export const instance = axios.create({
     baseURL: "http://localhost:8888",
     timeout: 1000,
-
+    headers: { 
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + getJwt()
+    }
   }
 );
 
@@ -24,7 +27,7 @@ function parseCookies(): { [key: string]: string } {
 
 export function getJwt(): string | null {
   const cookies = parseCookies();
-  return ('jwt' in cookies)?cookies['jwt'] : null; 
+  return ('jwt' in cookies)?cookies['jwt'] : ""; 
 }
 
 export function getSubject(): string | null {

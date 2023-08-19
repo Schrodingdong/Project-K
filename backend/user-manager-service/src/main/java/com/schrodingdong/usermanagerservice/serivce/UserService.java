@@ -42,6 +42,12 @@ public class UserService {
     public List<UserModel> getAllUsers() {
         return userRepository.findAll();
     }
+    public List<UserModel> getFollowingList(String userEmail) {
+    	return userRepository.getFollowingList(userEmail);
+    }
+    public List<UserModel> getFollowerList(String userEmail) {
+    	return userRepository.getFollowerList(userEmail);
+    }
 
     public boolean userExists(String email) {
         return userRepository.existsById(email);

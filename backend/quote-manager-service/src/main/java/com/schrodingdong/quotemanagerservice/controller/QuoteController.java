@@ -61,6 +61,21 @@ public class QuoteController {
         return ResponseEntity.ok().body(userQuotes);
     }
 
+	/***
+	 * Get the quotes of the users that the user with the given email is following
+	 * @param userEmail
+	 * @return
+	 */
+	@GetMapping("/get/following")
+    public ResponseEntity<?> getFollowingQuotes(@RequestHeader("User-Email") String userEmail) {
+		try {
+			List<QuoteModel> followingQuotes = quoteService.getQuotesFromFollowing(userEmail);
+			return ResponseEntity.ok().body(followingQuotes);
+		} catch (RuntimeException e) {
+			return ResponseEntity.internalServerError().body(e.getMessage());
+		}
+    }
+
     /**
      * Update a quote given its ID
      * @param params quote content to update

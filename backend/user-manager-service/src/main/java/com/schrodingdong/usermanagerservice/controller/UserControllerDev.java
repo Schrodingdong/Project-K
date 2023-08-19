@@ -21,8 +21,14 @@ public class UserControllerDev {
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<?> deleteUser(@RequestParam @NotBlank String email) {
+    public ResponseEntity<?> deleteUsers(@RequestParam @NotBlank String email) {
         userService.deleteAllUsers();
         return ResponseEntity.ok().body("All users deleted");
+    }
+    
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestParam @NotBlank String email) {
+        userService.deleteUser(email);
+        return ResponseEntity.ok().body("User of email : '"+ email +"' deleted");
     }
 }

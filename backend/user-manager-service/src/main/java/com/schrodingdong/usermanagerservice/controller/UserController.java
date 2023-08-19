@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestParam String email, @RequestBody UpdateUserParams body) {
+    public ResponseEntity<?> updateUser(@RequestHeader("User-Email") String email, @RequestBody UpdateUserParams body) {
         UserModel user;
         try {
             user = userService.updateUser(email, body.getUsername(), body.getBio());
@@ -70,17 +70,12 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestParam @NotBlank String email) {
-        userService.deleteUser(email);
-        return ResponseEntity.ok().body("User of email : '"+ email +"' deleted");
-    }
 
     @PutMapping("/follow")
-    public ResponseEntity<?> followUser(@RequestParam @NotBlank String email, @RequestParam @NotBlank String followEmail) {
+    public ResponseEntity<?> followUser(@RequestHeader("User-Email") String email, @RequestParam @NotBlank String toFollow) {
         UserModel user;
         try {
-            user = userService.followUser(email, followEmail);
+            user = userService.followUser(email, toFollow);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -88,7 +83,7 @@ public class UserController {
     }
 
     @DeleteMapping("/unfollow")
-    public ResponseEntity<?> unfollowUser(@RequestParam @NotBlank String email, @RequestParam @NotBlank String toUnfollow) {
+    public ResponseEntity<?> unfollowUser(@RequestHeader("User-Email") String email, @RequestParam @NotBlank String toUnfollow) {
         try {
             userService.unfollowUser(email, toUnfollow);
         } catch (NoSuchElementException e) {

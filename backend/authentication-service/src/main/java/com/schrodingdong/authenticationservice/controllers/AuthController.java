@@ -28,12 +28,10 @@ public class AuthController {
     public ResponseEntity<?> register(@Validated @RequestBody RegisterParams params) {
         AuthModel user = new AuthModel();
         try {
-            user = authService.register(params.getEmail(), params.getPassword());
+            user = authService.register(params.getEmail(), params.getPassword(), params.getUsername());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        // register the user in the user manager service
-        // TODO
         return ResponseEntity.ok().body(user);
     }
 

@@ -10,7 +10,13 @@ spring:
     uri: bolt://localhost:7687
     authentication:
       username: neo4j
-      password: switch-evita-banana-info-santana-9583
+      password: smoke-cake-cowboy-herbert-carpet-2714
   cloud:
     discovery:
       enabled: true
+
+amqp:
+  user-manager-registration:
+    queue: user-manager-registration
+  user-following:
+    queue: quote-user-following-q

@@ -43,7 +43,7 @@ public class AuthControllerDev {
     public ResponseEntity<?> register(@Validated @RequestBody RegisterParams params) {
         AuthModel user = new AuthModel();
         try {
-            user = authService.register(params.getEmail(), params.getPassword());
+            user = authService.register(params.getEmail(), params.getPassword(), params.getUsername());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

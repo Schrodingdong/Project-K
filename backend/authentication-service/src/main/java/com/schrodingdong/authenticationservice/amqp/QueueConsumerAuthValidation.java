@@ -8,11 +8,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QueueConsumer {
+public class QueueConsumerAuthValidation {
     @Autowired
     private AuthService authService;
     @Autowired
-    private QueueSender queueSender;
+    private QueueSenderAuthValidation queueSender;
 
     @RabbitListener(queues = {"${amqp.auth-validation.queue.request}"})
     public void validateReceivedJwt(@Payload String jwtToken) {
