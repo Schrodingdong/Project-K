@@ -5,7 +5,7 @@ import { instance, getJwt, getSubject } from "../../../api/instance";
 import jwtDecode from "jwt-decode";
 
 interface LoginProps extends utilProps{
-    setAuthToken: (token: string) => void;
+    setAuthToken: () => void;
 }
 /**
  * Should do the following :
@@ -29,11 +29,11 @@ const Login = (props: LoginProps) => {
             return;
         }
 
-        instance.post("/auth/login", {
+        instance(authContext.token).post("/auth/login", {
             email: log_email,
             password: log_password,
         }, {
-            headers: getJwt() == null? {}:{'Authorization': getJwt()} ,
+            headers: getJwt() == null? {}:{'Authorization': 'Bearer ' + getJwt()} ,
         })
         .then((res) => {
             // store jwt
@@ -41,13 +41,14 @@ const Login = (props: LoginProps) => {
             const decodedJwt = jwtDecode<{sub:string, exp:Number, iat:Number}>(jwt);
             document.cookie = `jwt=${jwt}; path=/`
             document.cookie = `subject=${decodedJwt.sub}; path=/`
-            authContext.setAuthToken(jwt);
+            props.setAuthToken();
             // navigate to homepage
             navigate("/home")
         }).catch((e) => {
             props.addAlert("Invalid credentials")
         })
     }
+
 
     return (
         <>

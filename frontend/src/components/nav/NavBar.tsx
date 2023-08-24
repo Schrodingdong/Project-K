@@ -1,13 +1,16 @@
 import './NavBar.css'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import AccountButton from "../AccountButton";
 import {useContext} from "react";
-import {AuthContext} from "../../App";
-import {instance} from "../../api/instance";
+import {AuthContext, utilProps} from "../../App";
+import {getJwt, getSubject, getUsername, instance} from "../../api/instance";
+import * as util from "util";
 
-const NavBar = () => {
+interface navbarProps {
+    setAuthToken: (token: string) => void;
+}
+const NavBar = (props: navbarProps) => {
     const authContext = useContext(AuthContext);
-    console.log(authContext)
     const _isAuth = authContext.isAuth;
 
     return (
@@ -18,7 +21,7 @@ const NavBar = () => {
             <div className="navigation">
                 {
                     _isAuth ?
-                        NavMenu() :
+                        NavMenu(props) :
                         <Link to="/auth/login" className="button-link button-login">Login</Link>
                 }
             </div>
@@ -26,9 +29,12 @@ const NavBar = () => {
     )
 }
 
+interface navmenuProps {
+    setAuthToken: (token: string) => void;
+}
 
-
-const NavMenu = () => {
+const NavMenu = (props: navmenuProps) => {
+    const navigate = useNavigate();
     const authContext = useContext(AuthContext);
     const token = authContext.token;
     function delete_cookie( name: string, path:string , domain:string ) {
@@ -45,22 +51,27 @@ const NavMenu = () => {
         });
     }
 
+
     const logout = (e: React.MouseEvent<HTMLButtonElement>) => {
-        instance.post("/auth/logout",{}, {
+        instance(getJwt()).post("/auth/logout",{}, {
             headers: {
                 'Authorization' : "Bearer " + token
             }
         })
-        authContext.setAuthToken("");
+        props.setAuthToken("");
     }
     return (
         <div className="nav-menu">
             <ul>
                 <li>
-                    Home
+                    <button className={'button-text'} onClick={event => {navigate("/home")}}>
+                        Home
+                    </button>
                 </li>
                 <li>
-                    Profile
+                    <button className={'button-text'} onClick={event => {navigate("/users/"+getSubject()+"/shared-quotes")}}>
+                        Profile
+                    </button>
                 </li>
                 <li>
                     <button className="button-outline-white" onClick={logout}>
@@ -68,7 +79,7 @@ const NavMenu = () => {
                     </button>
                 </li>
             </ul>
-            <AccountButton username="username"/>
+            <AccountButton username={getUsername()}/>
         </div>
     )
 }

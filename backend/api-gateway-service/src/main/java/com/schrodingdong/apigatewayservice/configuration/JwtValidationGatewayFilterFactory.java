@@ -30,7 +30,7 @@ public class JwtValidationGatewayFilterFactory
     private final Logger LOG = LoggerFactory.getLogger(JwtValidationGatewayFilterFactory.class);
     private static Boolean IS_JWT_VALID = null;
     private int count = 0;
-    private final int MAX_COUNT = 100;
+    private final int MAX_COUNT = 500;
 
     public JwtValidationGatewayFilterFactory(){
         super(Config.class);

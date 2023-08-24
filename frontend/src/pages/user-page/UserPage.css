@@ -1,0 +1,60 @@
+.section-3-4{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.section-3-4 .section-3{
+    width: 30%;
+    padding: 2rem;
+    box-sizing: border-box;
+    text-align: center;
+}
+.section-3-4 .section-4{
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.profile-image{
+    width: 100%;
+    border-radius: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+.following-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+@media only screen and (max-width: 1024px){
+    .section-3-4{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .section-3-4 .section-3{
+        width: 100%;
+    }
+    .section-3-4 .section-4{
+        width: 100%;
+    }
+
+}
+
+.selection{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.selection button {
+    width: 30%;
+    padding: 1rem 0;
+    font-size: larger;
+    border-radius: 5px;
+}
+.huge-sep{
+    width: 100%;
+    height: 5px;
+    background-color: var(--primary-color);
+}

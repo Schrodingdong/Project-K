@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -38,6 +39,17 @@ public class UserController {
         }
         return ResponseEntity.ok().body(user);
     }
+
+    /***
+     * Get all users with the exception of the user with sbject
+     * @return
+     */
+    @GetMapping("/get/all")
+    public ResponseEntity<?> getAllUsers(@RequestHeader("User-Email") String email) {
+        List<UserModel> userList = userService.getAllUsers().stream().filter(user -> !user.getEmail().equals(email)).toList();
+        return ResponseEntity.ok().body(userList);
+    }
+
     @GetMapping("/get/following")
     public ResponseEntity<?> getFollowingOf(@RequestParam String email) {
         UserModel user;

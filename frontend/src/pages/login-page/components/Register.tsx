@@ -1,5 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import { instance } from "../../../api/instance";
+import {getJwt, instance} from "../../../api/instance";
 import { useState } from "react";
 import Alert from "../../../components/Alert";
 import { utilProps } from "../../../App";
@@ -28,7 +28,7 @@ const Register = (props: RegisterProps) => {
             props.addAlert("Passwords don't match")
             return;
         }
-        instance.post("/auth/register",
+        instance(getJwt()).post("/auth/register",
             {
                 username: reg_username,
                 email:  reg_email,

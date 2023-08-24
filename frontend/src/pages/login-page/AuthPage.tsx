@@ -8,7 +8,6 @@ interface AuthPageProps extends utilProps{}
 const AuthPage = (props: AuthPageProps) => {
     const authContext = useContext(AuthContext)
     const isAuth = authContext.isAuth;
-    console.log(isAuth);
     return (
         <>
             {

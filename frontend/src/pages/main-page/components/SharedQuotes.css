@@ -1,0 +1,75 @@
+.shared-quotes-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.shared-quotes-header .button-full{
+    padding: 0 3rem;
+    font-size: large;
+}
+
+.quotes{
+    padding-left: 0;
+    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.quotes .quote{
+    list-style-type: none;
+    padding: 1.5rem;
+    border: 0 solid black;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+.quotes .quote-header{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: start;
+}
+.quotes .quote-footer{
+    color: rgba(0,0,0,.5);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+
+
+.quote-add-container {
+    width: 50%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.25);
+}
+.quote-add-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.quote-add-container label{
+    text-align: left;
+    width: 100%;
+}
+.quote-add-container form input[type="text"]{
+    border-radius: 100px;
+    border: 1px solid black;
+    width: 100%;
+    padding: 1rem 2rem;
+    box-sizing: border-box;
+}
+.quote-add-container form input[type="submit"]{
+    cursor: pointer;
+    margin: 0 0 0 auto;
+}

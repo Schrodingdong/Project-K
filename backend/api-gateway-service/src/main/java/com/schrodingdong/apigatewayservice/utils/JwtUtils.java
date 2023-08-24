@@ -22,7 +22,7 @@ public class JwtUtils {
     
     /***
      * Extracts the subject from the token
-     * @param jwt
+     * @param jwtToken the Token to extract the subject from
      * @return token's subject
      */
     public static String getSubjectFromToken(String jwtToken) {

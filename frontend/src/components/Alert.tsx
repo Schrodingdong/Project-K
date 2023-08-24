@@ -21,14 +21,14 @@ function Alert(props: AlertProps) {
   return (
     <>{
         isVisible && 
-        <div className='pop-up-alert'>
+        <li className='pop-up-alert'>
           <div className='alert-container'>
             <span>
               {props.errorMessage}
             </span>
             <IoMdClose onClick={closeAlert}/>
           </div>
-        </div>
+        </li >
       }
     </>
   );

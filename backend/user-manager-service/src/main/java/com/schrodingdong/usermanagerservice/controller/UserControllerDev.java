@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserControllerDev {
     private final UserService userService;
 
-    @GetMapping("/get/all")
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok().body(userService.getAllUsers());
-    }
-
+//    @GetMapping("/get/all")
+//    public ResponseEntity<?> getAllUsers() {
+//        return ResponseEntity.ok().body(userService.getAllUsers());
+//    }
+//
     @DeleteMapping("/delete/all")
     public ResponseEntity<?> deleteUsers(@RequestParam @NotBlank String email) {
         userService.deleteAllUsers();

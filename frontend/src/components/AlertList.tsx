@@ -10,10 +10,8 @@ function AlertList(props: AlertListProps) {
   return(
     <ul className='alert-list'>
       {
-        props.alerts.map((el) => 
-          <li>
+        props.alerts.map((el) =>
             <Alert key={el} errorMessage={el}/>
-          </li>
         )
       }
     </ul>

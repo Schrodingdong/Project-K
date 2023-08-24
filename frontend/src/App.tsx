@@ -13,15 +13,18 @@ import { useState } from 'react';
 import {getJwt, getSubject, instance} from "./api/instance";
 import Fallback from "./pages/Fallback";
 import jwtDecode from "jwt-decode";
+import UserPage from "./pages/user-page/UserPage";
+import UserSharedQuotes from "./pages/user-page/components/UserSharedQuotes";
+import UserFollowing from "./pages/user-page/components/UserFollowing";
+import UserFollowers from "./pages/user-page/components/UserFollowers";
 
 export interface utilProps {
     addAlert : (value: string) => void;
 }
 
-export const AuthContext = React.createContext<{isAuth: boolean, token: string, setAuthToken: (token:string) => void}>({
+export const AuthContext = React.createContext<{isAuth: boolean, token: string}>({
     token: "",
-    isAuth: false,
-    setAuthToken: () => {}
+    isAuth: false
 });
 
 function App() {
@@ -29,46 +32,56 @@ function App() {
     const [token, setToken] = useState<string>(""); // check on refresh if we already have a token
     const navigate = useNavigate();
     useEffect(() => {
+        console.log("BEFORE : " + token);
         // check if we already have a token
         const jwt = getJwt();
         const sub = getSubject();
-        if (jwt === null || sub === null) {navigate("/");return;}
+        if (jwt === null || jwt === '' || sub === null || sub === '') {navigate("/");return;}
         // check if the subject from token is same as subject in cookie
         const decodedJwt = jwtDecode<{sub:string, exp:Number, iat:Number}>(jwt? jwt:"");
         if( decodedJwt.sub != sub) {navigate("/");return;}
         // check if its a valid token ?
-        instance.post("/auth/validate-jwt", {}, {
+        instance(getJwt()).post("/auth/validate-jwt", {}, {
             headers: {
                 'Authorization' : "Bearer " + jwt
             }
-        }).then(e => setToken(jwt? jwt:""))
+        })
+            .then(e => setToken(jwt? jwt:""))
             .catch(err => {
                 console.error(err);
-                setToken("")
+                setToken("");
             });
-    },[])
+        console.log("AFTER : " + token);
+    },[token])
 
+
+    const storeJwt = () => {
+        setToken(getJwt());
+    }
 
     const addAlert = (message: string) => {
-        console.log(alerts)
         setAlerts([...alerts, message]);
     }
 
     return (
         <AuthContext.Provider value={{
             isAuth: token.length > 0,
-            token: token,
-            setAuthToken: setToken
+            token: getJwt(),
         }}>
-            <NavBar/>
+            <NavBar setAuthToken={setToken}/>
             <AlertList alerts={alerts}/>
             <Routes>
                 <Route path="/" element={<LandingPage/>}/>
                 <Route path="auth" element={<AuthPage addAlert={addAlert}/>}>
-                    <Route path="login" element={<Login setAuthToken={setToken} addAlert={addAlert}/>}/>
+                    <Route path="login" element={<Login setAuthToken={storeJwt} addAlert={addAlert}/>}/>
                     <Route path="register" element={<Register addAlert={addAlert}/>}/>
                 </Route>
-                <Route path="home" element={<HomePage/>}/>
+                <Route path="home" element={<HomePage addAlert={addAlert}/>}/>
+                <Route path={"users/:subject"} element={<UserPage addAlert={addAlert}/>}>
+                    <Route path="shared-quotes" element={<UserSharedQuotes/>}/>
+                    <Route path="following" element={<UserFollowing addAlert={addAlert}/>}/>
+                    <Route path="followers" element={<UserFollowers />}/>
+                </Route>
                 <Route path={"*"} element={<Fallback/>}/>
             </Routes>
             {/*<RouterProvider router={router}/>*/}
