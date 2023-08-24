@@ -7,7 +7,7 @@ spring:
   application:
     name: user-manager-service
   neo4j:
-    uri: bolt://localhost:7687
+    uri: bolt://neo4j:7687
     authentication:
       username: neo4j
       password: smoke-cake-cowboy-herbert-carpet-2714
@@ -15,6 +15,12 @@ spring:
     discovery:
       enabled: true
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka
+    registerWithEureka: true
+    fetchRegistry: true
 amqp:
   user-manager-registration:
     queue: user-manager-registration

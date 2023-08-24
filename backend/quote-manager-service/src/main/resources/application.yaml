@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017
+      uri: mongodb://mongo-db:27017
       database: projectK
 
   application:
@@ -19,3 +19,10 @@ server:
   servlet:
     context-path: /api/v1
   port: 8081
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka
+    registerWithEureka: true
+    fetchRegistry: true

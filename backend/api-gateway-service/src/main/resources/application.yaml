@@ -17,11 +17,10 @@ spring:
     discovery:
       enabled: true
   rabbitmq:
-    host: localhost #change to rabbitmq when dockerized
+    host: rabbitmq #change to rabbitmq when dockerized
     port: 5672
     username: guest
     password: guest
-
 amqp:
   auth-validation:
     queue:
@@ -32,4 +31,9 @@ amqp:
 
 server:
   port: 8888
-
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery:8761/eureka/
