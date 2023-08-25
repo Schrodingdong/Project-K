@@ -1,0 +1,16 @@
+amqp:
+  queue-names:
+    authValidationReq: auth-validation-req
+    authValidationRes: auth-validation-res
+    quoteUserFollowingQ: quote-user-following-q
+spring:
+  rabbitmq:
+    host: rabbitmq
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery:8761/eureka/
+server:
+  port: 7777

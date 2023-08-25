@@ -17,6 +17,15 @@ services:
     image: project-k-discovery
     ports:
       - 8761:8761
+  configuration:
+    container_name: configuration
+    image: project-k-configuration
+    ports:
+      - 7777:7777
+    depends_on:
+      - api-gateway
+      - discovery
+      - rabbitmq
   authentication:
     container_name: authentication
     image: project-k-authentication

@@ -21,6 +21,7 @@
         <module>user-manager-service</module>
         <module>authentication-service</module>
         <module>quote-manager-service</module>
+        <module>configuration-service</module>
     </modules>
 
     <properties>
